@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
+//import React, { useState } from 'react';
+//import { Container } from 'react-bootstrap';
 import { SettingsForm } from './components/SettingsForm.jsx';
 import { GenerateTimetable } from './components/GenerateTimetable.jsx';
 import { HtmlContent } from './components/HtmlContent';
@@ -11,6 +11,8 @@ export function App() {
       <SettingsForm />
       <GenerateTimetable />
 
+      <br></br>
+      <br></br>
       <blockquote>
         <pre>{HtmlContent}</pre>
       </blockquote>

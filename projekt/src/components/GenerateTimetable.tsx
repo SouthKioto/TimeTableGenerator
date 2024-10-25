@@ -1,9 +1,12 @@
 import { SettingsForm } from './SettingsForm';
 import { HtmlContent } from './HtmlContent';
 import { useState } from 'react';
+import { TeachersData } from './TeachersData';
 
-export const GenerateTimetable = params => {
+export const GenerateTimetable = () => {
   const [inputValue, setInputValue] = useState('');
+
+  console.log(TeachersData);
 
   const handleDownload = () => {
     const blob = new Blob([HtmlContent], { type: 'text/html' });
@@ -18,6 +21,12 @@ export const GenerateTimetable = params => {
     document.body.removeChild(link);
   };
 
+  /*
+
+
+
+  */
+
   return (
     <>
       <div>
@@ -25,6 +34,12 @@ export const GenerateTimetable = params => {
         <input type='text' value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder='Wpisz tekst' />
         <button onClick={handleDownload}>Pobierz plik HTML</button>
       </div>
+
+      <ul>
+        {TeachersData.map(index, data => {
+          <li key={index}>{data.name}</li>;
+        })}
+      </ul>
     </>
   );
 };
