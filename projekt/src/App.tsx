@@ -1,6 +1,6 @@
 //import React, { useState } from 'react';
 //import { Container } from 'react-bootstrap';
-import { SettingsForm } from './components/SettingsForm.jsx';
+//import { SettingsForm } from './components/SettingsForm.jsx';
 import { GenerateTimetable } from './components/GenerateTimetable.jsx';
 
 export function App() {
@@ -8,9 +8,6 @@ export function App() {
     <>
       <h1>main page</h1>
       <GenerateTimetable />
-
-      <br></br>
-      <br></br>
     </>
   );
 }
