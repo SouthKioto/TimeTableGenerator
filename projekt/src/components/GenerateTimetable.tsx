@@ -1,36 +1,36 @@
-import { SettingsForm } from './SettingsForm';
-import { useState } from 'react';
-import { TeachersData } from './TeachersData';
-import { DisplayCodeGeneratedTable } from './DisplayCodeGeneratedTable';
+//import { SettingsForm } from "./SettingsForm";
+import { useState } from "react";
+import { TeachersData } from "./TeachersData";
+import { DisplayCodeGeneratedTable } from "./DisplayCodeGeneratedTable";
 
 export const GenerateTimetable = () => {
-  const [htmlContent, setHtmlContent] = useState('');
+  const [htmlContent, setHtmlContent] = useState("");
   const [showTimetableSourceCode, setShowTimetableSourceCode] = useState(false);
 
-  const [hours, setHours] = useState([
-    '7:30-8:15',
-    '8:20-9:05',
-    '9:10-9:55',
-    '10:00-10:45',
-    '11:00-11:45',
-    '11:50-12:35',
-    '12:40-13:25',
-    '13:45-14:30',
-    '14:35-15:20',
-    '15:25-16:10',
-    '16:15-17:00',
-    '17:05-17:50',
-    '17:55-18:40',
-    '21:45-21:46',
-    '21:47-21:48',
-    '21:49-21:50',
-    '21:51-21:52',
-  ]);
+  const hours = [
+    "7:30-8:15",
+    "8:20-9:05",
+    "9:10-9:55",
+    "10:00-10:45",
+    "11:00-11:45",
+    "11:50-12:35",
+    "12:40-13:25",
+    "13:45-14:30",
+    "14:35-15:20",
+    "15:25-16:10",
+    "16:15-17:00",
+    "17:05-17:50",
+    "17:55-18:40",
+    "21:45-21:46",
+    "21:47-21:48",
+    "21:49-21:50",
+    "21:51-21:52",
+  ];
 
   //console.log(TeachersData);
 
   const getAvailableTeachers = () => {
-    const availableTeacher = TeachersData.map(teacher => ({
+    const availableTeacher = TeachersData.map((teacher) => ({
       ...teacher,
       remainingLessons: teacher.lessonsInWeekCount,
     }));
@@ -38,13 +38,13 @@ export const GenerateTimetable = () => {
     return availableTeacher;
   };
 
-  const getTeachersWithFreeHours = teachers => {
-    const data = teachers.filter(teacher => teacher.remainingLessons > 0);
+  const getTeachersWithFreeHours = (teachers) => {
+    const data = teachers.filter((teacher) => teacher.remainingLessons > 0);
     return data;
   };
 
   const generateTableSchema = async () => {
-    let tableRows = '';
+    let tableRows = "";
 
     const availableTeachers = getAvailableTeachers();
 
@@ -54,10 +54,13 @@ export const GenerateTimetable = () => {
                 `;
 
       for (let j = 0; j < 5; j++) {
-        const teachersWithFreeHours = getTeachersWithFreeHours(availableTeachers);
+        const teachersWithFreeHours =
+          getTeachersWithFreeHours(availableTeachers);
 
         if (teachersWithFreeHours.length > 0) {
-          const randomIndex = Math.floor(Math.random() * teachersWithFreeHours.length);
+          const randomIndex = Math.floor(
+            Math.random() * teachersWithFreeHours.length,
+          );
           const selectedTeacher = teachersWithFreeHours[randomIndex];
 
           row += `<td style="width: 180px; height: 40px; text-align: center">
@@ -68,11 +71,11 @@ export const GenerateTimetable = () => {
 
           selectedTeacher.remainingLessons--;
         } else {
-          row += `<td style="width: 180px; height: 40px; text-align: center"></td>`;
+          row += `<td style="width: 180px; height: 40px; text-align: center"> - </td>`;
         }
       }
 
-      row += '</tr>';
+      row += "</tr>";
       tableRows += row;
     }
 
@@ -112,12 +115,12 @@ export const GenerateTimetable = () => {
   };
 
   const handleDownload = () => {
-    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const blob = new Blob([htmlContent], { type: "text/html" });
     const url = URL.createObjectURL(blob);
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = 'index.html';
+    link.download = "index.html";
     document.body.appendChild(link);
     link.click();
 
@@ -130,6 +133,9 @@ export const GenerateTimetable = () => {
         {TeachersData.map(data => (
           <li key={data.name}>
             {data.name}, {data.sala}
+            :q
+
+;
           </li>
         ))}
       </ul>
@@ -143,14 +149,24 @@ export const GenerateTimetable = () => {
 
   return (
     <>
-      <div style={{ maxWidth: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
+      <div
+        style={{
+          maxWidth: "fit-content",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
         <h1>Generowanie pliku HTML</h1>
         <button onClick={handleDownload}>Pobierz plik HTML</button>
         <button onClick={generateTableSchema}>Generuj</button>
-        <button onClick={handleChangeSourceCodeWisibility}>Pokaż kod planu lekcji</button>
+        <button onClick={handleChangeSourceCodeWisibility}>
+          Pokaż kod planu lekcji
+        </button>
       </div>
 
-      {showTimetableSourceCode ? <DisplayCodeGeneratedTable htmlContent={htmlContent} /> : null}
+      {showTimetableSourceCode ? (
+        <DisplayCodeGeneratedTable htmlContent={htmlContent} />
+      ) : null}
 
       <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
     </>
