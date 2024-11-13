@@ -48,8 +48,8 @@ export const GenerateTimetable = () => {
     const availableTeachers = getAvailableTeachers();
 
     for (let i = 0; i < hours.length; i++) {
-      let row = `<tr style="background: #fff">
-                  <td style="width: 100px; height: 40px; text-align: center">${i + 1}.<br />${hours[i]}</td>
+      let row = `<tr>
+                  <td class="bg-gray-200 border-2 border-black" style="width: 100px; height: 40px; text-align: center">${i + 1}.<br />${hours[i]}</td>
                 `;
 
       for (let j = 0; j < 5; j++) {
@@ -85,15 +85,15 @@ export const GenerateTimetable = () => {
       </head>
       <body>
         <center>
-          <table border="1">
+          <table class="rounded-lg">
             <tbody>
-              <tr style="background: #eee">
-                <td style="width: 100px; height: 40px; text-align: center"><b>Nr lekcji</b></td>
-                <td style="width: 180px; height: 40px; text-align: center"><b>Poniedziałek</b></td>
-                <td style="width: 180px; height: 40px; text-align: center"><b>Wtorek</b></td>
-                <td style="width: 180px; height: 40px; text-align: center"><b>Środa</b></td>
-                <td style="width: 180px; height: 40px; text-align: center"><b>Czwartek</b></td>
-                <td style="width: 180px; height: 40px; text-align: center"><b>Piątek</b></td>
+              <tr class="bg-gray-200">
+                <td class="border-2 border-black" style="width: 100px; height: 40px; text-align: center"><b>Nr lekcji</b></td>
+                <td class="border-2 border-black" style="width: 180px; height: 40px; text-align: center"><b>Poniedziałek</b></td>
+                <td class="border-2 border-black" style="width: 180px; height: 40px; text-align: center"><b>Wtorek</b></td>
+                <td class="border-2 border-black" style="width: 180px; height: 40px; text-align: center"><b>Środa</b></td>
+                <td class="border-2 border-black" style="width: 180px; height: 40px; text-align: center"><b>Czwartek</b></td>
+                <td class="border-2 border-black" style="width: 180px; height: 40px; text-align: center"><b>Piątek</b></td>
               </tr>
               ${tableRows}
             </tbody>
@@ -143,12 +143,6 @@ export const GenerateTimetable = () => {
 
         <div className='flex flex-col md:flex-row justify-center items-center gap-4 mb-8'>
           <button
-            disabled={htmlContentGenerated}
-            className='px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors'
-            onClick={handleDownload}>
-            Pobierz plik HTML
-          </button>
-          <button
             className='px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors'
             onClick={generateTableSchema}>
             Generuj
@@ -157,6 +151,12 @@ export const GenerateTimetable = () => {
             className='px-6 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition-colors'
             onClick={handleDeleteGeneratedTableShema}>
             Czyść
+          </button>
+          <button
+            disabled={htmlContentGenerated}
+            className='px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors'
+            onClick={handleDownload}>
+            Pobierz plik HTML
           </button>
           <button
             disabled={htmlContentGenerated}
@@ -171,13 +171,15 @@ export const GenerateTimetable = () => {
             <DisplayCodeGeneratedTable htmlContent={htmlContent} />
           </div>
         )}
-      </div>
 
-      {htmlContent && (
-        <div
-          className='p-6 bg-white rounded-lg shadow-lg overflow-auto max-w-full mx-auto mb-8 overflow-x-auto'
-          dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
-      )}
+        {htmlContent && (
+          <div className='bg-gray-100 p-4 rounded-lg shadow-md mb-8'>
+            <div
+              className='p-4 bg-white rounded-lg shadow-md overflow-x-auto'
+              dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+          </div>
+        )}
+      </div>
     </>
   );
 };
