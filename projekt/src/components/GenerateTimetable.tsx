@@ -1,50 +1,48 @@
 //import { SettingsForm } from "./SettingsForm";
-import { useState } from "react";
-import { TeachersData } from "./TeachersData";
-import { DisplayCodeGeneratedTable } from "./DisplayCodeGeneratedTable";
+import { useState } from 'react';
+import { Teacher, TeachersData } from './TeachersData';
+import { DisplayCodeGeneratedTable } from './DisplayCodeGeneratedTable';
 
 export const GenerateTimetable = () => {
-  const [htmlContent, setHtmlContent] = useState("");
+  const [htmlContent, setHtmlContent] = useState('');
   const [showTimetableSourceCode, setShowTimetableSourceCode] = useState(false);
-
   const hours = [
-    "7:30-8:15",
-    "8:20-9:05",
-    "9:10-9:55",
-    "10:00-10:45",
-    "11:00-11:45",
-    "11:50-12:35",
-    "12:40-13:25",
-    "13:45-14:30",
-    "14:35-15:20",
-    "15:25-16:10",
-    "16:15-17:00",
-    "17:05-17:50",
-    "17:55-18:40",
-    "21:45-21:46",
-    "21:47-21:48",
-    "21:49-21:50",
-    "21:51-21:52",
+    '7:30-8:15',
+    '8:20-9:05',
+    '9:10-9:55',
+    '10:00-10:45',
+    '11:00-11:45',
+    '11:50-12:35',
+    '12:40-13:25',
+    '13:45-14:30',
+    '14:35-15:20',
+    '15:25-16:10',
+    '16:15-17:00',
+    '17:05-17:50',
+    '17:55-18:40',
+    '21:45-21:46',
+    '21:47-21:48',
+    '21:49-21:50',
+    '21:51-21:52',
   ];
 
   //console.log(TeachersData);
 
   const getAvailableTeachers = () => {
-    const availableTeacher = TeachersData.map((teacher) => ({
+    const availableTeacher = TeachersData.map(teacher => ({
       ...teacher,
-      remainingLessons: teacher.lessonsInWeekCount,
     }));
 
     return availableTeacher;
   };
 
-  const getTeachersWithFreeHours = (teachers) => {
-    const data = teachers.filter((teacher) => teacher.remainingLessons > 0);
+  const getTeachersWithFreeHours = (teachers: Teacher[]) => {
+    const data = teachers.filter(teacher => teacher.lessonsInWeekCount > 0);
     return data;
   };
 
   const generateTableSchema = async () => {
-    let tableRows = "";
+    let tableRows = '';
 
     const availableTeachers = getAvailableTeachers();
 
@@ -54,13 +52,10 @@ export const GenerateTimetable = () => {
                 `;
 
       for (let j = 0; j < 5; j++) {
-        const teachersWithFreeHours =
-          getTeachersWithFreeHours(availableTeachers);
+        const teachersWithFreeHours = getTeachersWithFreeHours(availableTeachers);
 
         if (teachersWithFreeHours.length > 0) {
-          const randomIndex = Math.floor(
-            Math.random() * teachersWithFreeHours.length,
-          );
+          const randomIndex = Math.floor(Math.random() * teachersWithFreeHours.length);
           const selectedTeacher = teachersWithFreeHours[randomIndex];
 
           row += `<td style="width: 180px; height: 40px; text-align: center">
@@ -69,13 +64,13 @@ export const GenerateTimetable = () => {
                      sala: ${selectedTeacher.sala}<br>
                   </td>`;
 
-          selectedTeacher.remainingLessons--;
+          selectedTeacher.lessonsInWeekCount--;
         } else {
           row += `<td style="width: 180px; height: 40px; text-align: center"> - </td>`;
         }
       }
 
-      row += "</tr>";
+      row += '</tr>';
       tableRows += row;
     }
 
@@ -115,12 +110,12 @@ export const GenerateTimetable = () => {
   };
 
   const handleDownload = () => {
-    const blob = new Blob([htmlContent], { type: "text/html" });
+    const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = "index.html";
+    link.download = 'index.html';
     document.body.appendChild(link);
     link.click();
 
@@ -149,26 +144,39 @@ export const GenerateTimetable = () => {
 
   return (
     <>
-      <div
-        style={{
-          maxWidth: "fit-content",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      >
-        <h1>Generowanie pliku HTML</h1>
-        <button onClick={handleDownload}>Pobierz plik HTML</button>
-        <button onClick={generateTableSchema}>Generuj</button>
-        <button onClick={handleChangeSourceCodeWisibility}>
-          Pokaż kod planu lekcji
-        </button>
+      <div className='container mx-auto py-8 px-4 bg-blue-50 rounded-lg shadow-lg'>
+        <h1 className='text-2xl font-bold text-blue-700 mb-6 text-center'>Generator Podziału Godzin (Demo)</h1>
+
+        <div className='flex flex-col md:flex-row justify-center items-center gap-4 mb-8'>
+          <button
+            className='px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors'
+            onClick={handleDownload}>
+            Pobierz plik HTML
+          </button>
+          <button
+            className='px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors'
+            onClick={generateTableSchema}>
+            Generuj
+          </button>
+          <button
+            className='px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition-colors'
+            onClick={handleChangeSourceCodeWisibility}>
+            {showTimetableSourceCode ? 'Ukryj kod planu lekcji' : 'Pokaż kod planu lekcji'}
+          </button>
+        </div>
+
+        {showTimetableSourceCode && (
+          <div className='bg-gray-100 p-4 rounded-lg shadow-md mb-8'>
+            <DisplayCodeGeneratedTable htmlContent={htmlContent} />
+          </div>
+        )}
       </div>
 
-      {showTimetableSourceCode ? (
-        <DisplayCodeGeneratedTable htmlContent={htmlContent} />
-      ) : null}
-
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+      {htmlContent && (
+        <div
+          className='p-6 bg-white rounded-lg shadow-lg overflow-auto max-w-full mx-auto mb-8 overflow-x-auto'
+          dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+      )}
     </>
   );
 };

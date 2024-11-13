@@ -6,7 +6,6 @@ import { GenerateTimetable } from './components/GenerateTimetable.jsx';
 export function App() {
   return (
     <>
-      <h1>main page</h1>
       <GenerateTimetable />
     </>
   );
