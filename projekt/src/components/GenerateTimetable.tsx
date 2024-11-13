@@ -1,11 +1,14 @@
 //import { SettingsForm } from "./SettingsForm";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Teacher, TeachersData } from './TeachersData';
 import { DisplayCodeGeneratedTable } from './DisplayCodeGeneratedTable';
 
 export const GenerateTimetable = () => {
   const [htmlContent, setHtmlContent] = useState('');
   const [showTimetableSourceCode, setShowTimetableSourceCode] = useState(false);
+
+  const [htmlContentGenerated, setHtmlContentGenerated] = useState(false);
+
   const hours = [
     '7:30-8:15',
     '8:20-9:05',
@@ -20,13 +23,11 @@ export const GenerateTimetable = () => {
     '16:15-17:00',
     '17:05-17:50',
     '17:55-18:40',
-    '21:45-21:46',
-    '21:47-21:48',
-    '21:49-21:50',
-    '21:51-21:52',
   ];
 
-  //console.log(TeachersData);
+  useEffect(() => {
+    handleCheckGeneratedHtmlContent();
+  }, [htmlContent]);
 
   const getAvailableTeachers = () => {
     const availableTeacher = TeachersData.map(teacher => ({
@@ -60,8 +61,8 @@ export const GenerateTimetable = () => {
 
           row += `<td style="width: 180px; height: 40px; text-align: center">
                     ${selectedTeacher.name} ${selectedTeacher.surname}<br> 
-                     ${selectedTeacher.lessonName}<br>
-                     sala: ${selectedTeacher.sala}<br>
+                    ${selectedTeacher.lessonName}<br>
+                    sala: ${selectedTeacher.sala}<br>
                   </td>`;
 
           selectedTeacher.lessonsInWeekCount--;
@@ -109,6 +110,19 @@ export const GenerateTimetable = () => {
     setShowTimetableSourceCode(!showTimetableSourceCode);
   };
 
+  const handleDeleteGeneratedTableShema = () => {
+    setHtmlContent('');
+    setShowTimetableSourceCode(false);
+  };
+
+  const handleCheckGeneratedHtmlContent = () => {
+    if (htmlContent.length === 0) {
+      setHtmlContentGenerated(true);
+    } else {
+      setHtmlContentGenerated(false);
+    }
+  };
+
   const handleDownload = () => {
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
@@ -122,26 +136,6 @@ export const GenerateTimetable = () => {
     document.body.removeChild(link);
   };
 
-  /*
-  przydatny kod
-        <ul>
-        {TeachersData.map(data => (
-          <li key={data.name}>
-            {data.name}, {data.sala}
-            :q
-
-;
-          </li>
-        ))}
-      </ul>
-
-      <ol>
-        {randomIndex.map((data, index) => (
-          <li key={index}>{data}</li>
-        ))}
-      </ol>
-  */
-
   return (
     <>
       <div className='container mx-auto py-8 px-4 bg-blue-50 rounded-lg shadow-lg'>
@@ -149,6 +143,7 @@ export const GenerateTimetable = () => {
 
         <div className='flex flex-col md:flex-row justify-center items-center gap-4 mb-8'>
           <button
+            disabled={htmlContentGenerated}
             className='px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors'
             onClick={handleDownload}>
             Pobierz plik HTML
@@ -159,6 +154,12 @@ export const GenerateTimetable = () => {
             Generuj
           </button>
           <button
+            className='px-6 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition-colors'
+            onClick={handleDeleteGeneratedTableShema}>
+            Czyść
+          </button>
+          <button
+            disabled={htmlContentGenerated}
             className='px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition-colors'
             onClick={handleChangeSourceCodeWisibility}>
             {showTimetableSourceCode ? 'Ukryj kod planu lekcji' : 'Pokaż kod planu lekcji'}
