@@ -4,11 +4,12 @@ import { Teacher, TeachersData } from './TeachersData';
 import { DisplayCodeGeneratedTable } from './DisplayCodeGeneratedTable';
 
 export const GenerateTimetable = () => {
-  const [htmlContent, setHtmlContent] = useState('');
-  const [showTimetableSourceCode, setShowTimetableSourceCode] = useState(false);
+  const [htmlContent, setHtmlContent] = useState(''); // stan przechowujący wykenerowany kod html
+  const [showTimetableSourceCode, setShowTimetableSourceCode] = useState(false); // stan zmieniający widocznosc kodu
 
-  const [htmlContentGenerated, setHtmlContentGenerated] = useState(false);
+  const [htmlContentGenerated, setHtmlContentGenerated] = useState(false); // stan sprawdzajacy czy kod został wygenerowany
 
+  // definicja tablicy z godzinami
   const hours = [
     '7:30-8:15',
     '8:20-9:05',
@@ -25,10 +26,12 @@ export const GenerateTimetable = () => {
     '17:55-18:40',
   ];
 
+  // hook useEffect wywyołujący funkcje handleCheckGeneratedHtmlContent
   useEffect(() => {
     handleCheckGeneratedHtmlContent();
   }, [htmlContent]);
 
+  // funkcja kopiujaca dane z tablicy Teachers do zmiennej availableTeacher
   const getAvailableTeachers = () => {
     const availableTeacher = TeachersData.map(teacher => ({
       ...teacher,
@@ -37,11 +40,14 @@ export const GenerateTimetable = () => {
     return availableTeacher;
   };
 
+  // funkcja sprawdzająca którzy nauczyciele maja jeszcze wieksza
+  // od zera ilosc pozostałych godzin
   const getTeachersWithFreeHours = (teachers: Teacher[]) => {
     const data = teachers.filter(teacher => teacher.lessonsInWeekCount > 0);
     return data;
   };
 
+  //funkcja generująca podzial godzin
   const generateTableSchema = async () => {
     let tableRows = '';
 
@@ -56,7 +62,7 @@ export const GenerateTimetable = () => {
         const teachersWithFreeHours = getTeachersWithFreeHours(availableTeachers);
 
         if (teachersWithFreeHours.length > 0) {
-          const randomIndex = Math.floor(Math.random() * teachersWithFreeHours.length);
+          const randomIndex = Math.floor(Math.random() * teachersWithFreeHours.length); // generowanie randomowego indeksu (od 0 do ilosci nauczycieli z aktualnie wolnymi godzinami)
           const selectedTeacher = teachersWithFreeHours[randomIndex];
 
           row += `<td style="width: 180px; height: 40px; text-align: center">
@@ -124,17 +130,19 @@ export const GenerateTimetable = () => {
   };
 
   const handleDownload = () => {
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
+    const blob = new Blob([htmlContent], { type: 'text/html' }); // tworzenie obiektu Blob przechowującego kod html (type: 'text/html')
+    const url = URL.createObjectURL(blob); // tworzenie tymczasowego adresu URL
 
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'index.html';
-    document.body.appendChild(link);
-    link.click();
+    const link = document.createElement('a'); // tworzenie hiperłącza
+    link.href = url; // ustawienei wartości href dla hiperłącza
+    link.download = 'index.html'; // nadanie nazwy pobieranemu plikowi
+    document.body.appendChild(link); // dodanie hiperłącza do dokumentu
+    link.click(); // automatyczne kliknięcie hiperłącza
 
-    document.body.removeChild(link);
+    document.body.removeChild(link); // usuniecie hiperłącza z dokumentu
   };
+
+  // dangerouslySetInnerHTML atrybut react wstawiający surowy kod html do elementu DOM
 
   return (
     <>

@@ -1,3 +1,5 @@
+// interface: jest to sposob definiowania struktury obiektów,
+// (określenie jakie właściwości i typy będą miec dane w obiekcie)
 export interface Teacher {
   name: string;
   surname: string;
@@ -6,6 +8,7 @@ export interface Teacher {
   lessonsInWeekCount: GLfloat;
 }
 
+// Stworzenie tablicy nauczycieli zgodną z interfejsem Teacher
 export const TeachersData: Teacher[] = [
   { name: 'Marta', surname: 'Smolen', lessonName: 'Jezyk Polski', sala: '26', lessonsInWeekCount: 3 },
   { name: 'Alicja', surname: 'Dębska', lessonName: 'Matematyka', sala: '60', lessonsInWeekCount: 5 },
