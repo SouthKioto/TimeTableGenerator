@@ -65,7 +65,7 @@ export const GenerateTimetable = () => {
           const randomIndex = Math.floor(Math.random() * teachersWithFreeHours.length); // generowanie randomowego indeksu (od 0 do ilosci nauczycieli z aktualnie wolnymi godzinami)
           const selectedTeacher = teachersWithFreeHours[randomIndex];
 
-          row += `<td style="width: 180px; height: 40px; text-align: center">
+          row += `<td style="width: 180px; height: 40px; text-align: center; ${i % 2 == 0 ? 'background-color: lightgray;' : ''} border: 1px solid black;">
                     ${selectedTeacher.name} ${selectedTeacher.surname}<br> 
                     ${selectedTeacher.lessonName}<br>
                     sala: ${selectedTeacher.sala}<br>
