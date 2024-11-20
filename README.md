@@ -1,6 +1,6 @@
-### Timetable Generator
+# Timetable Generator
 
-## Aplikacja stworzona do generowania planów lekcji
+### Aplikacja stworzona do generowania planów lekcji
 
 Aktualnie implementuje:
 - generowanie podziału godzin z statycznej bazy danych
