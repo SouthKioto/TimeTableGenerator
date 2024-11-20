@@ -2,31 +2,25 @@ import { useState } from 'react';
 import { Teacher, TeachersData } from './TeachersData';
 
 export const Settings = () => {
-  const [selectedTeacherId, setSelectedTeacherId] = useState<number>(0);
+  const [selectedFilteredTeacher, setSelectedFilteredTeacher] = useState<Teacher | null>(null);
   const [checkIsSelected, setCheckIsSelected] = useState(false);
-  const [selectedFilteredTeacher, setSelectedFilteredTeacher] = useState<Teacher[]>();
 
   const handleFilterTeachersById = (teacherId: number) => {
-    //const teachersId = new Set(TeachersData.map(({ id }) => id));
-
-    //setSelectedFilteredTeacher();
-    const filteredData = TeachersData.filter(teacher => teacher.id === teacherId);
-
-    filteredData.map(teacher => {
-      console.log(teacher.name);
-    });
+    const filteredData = TeachersData.find(teacher => teacher.id === teacherId);
+    setSelectedFilteredTeacher(filteredData || null);
   };
 
   const handleChangeSelectedTeacher = e => {
-    setSelectedTeacherId(e.target.value);
+    const teacherId = parseInt(e.target.value, 10);
+    handleFilterTeachersById(teacherId);
+
     setCheckIsSelected(true);
-
-    //handleFilterTeachersById();
   };
 
-  const handleSaveSettings = e => {
-    e.preventDefault();
+  const handleSaveSettings = () => {
+    console.log('Selected teacher:', selectedFilteredTeacher);
   };
+
   return (
     <>
       <div className='p-6 bg-white rounded-lg shadow-lg max-w-xl mx-auto'>
@@ -53,18 +47,70 @@ export const Settings = () => {
 
           {checkIsSelected ? (
             <>
-              <h1>siema {selectedTeacherId}</h1>
+              <div className='p-6 bg-white rounded-lg shadow-md space-y-4'>
+                <h2 className='text-xl font-semibold text-gray-800 mb-4'>Dane nauczyciela</h2>
+
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>Imię</label>
+                  <input
+                    type='text'
+                    value={selectedFilteredTeacher?.name}
+                    className='w-full mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+                    placeholder='Wpisz imię'
+                  />
+                </div>
+
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>Nazwisko</label>
+                  <input
+                    type='text'
+                    value={selectedFilteredTeacher?.surname}
+                    className='w-full mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+                    placeholder='Wpisz nazwisko'
+                  />
+                </div>
+
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>Ilość lekcji w tygodniu</label>
+                  <input
+                    type='number'
+                    value={selectedFilteredTeacher?.lessonsInWeekCount}
+                    className='w-full mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+                    placeholder='Wpisz liczbę lekcji'
+                  />
+                </div>
+
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>Sala</label>
+                  <input
+                    type='text'
+                    value={selectedFilteredTeacher?.sala}
+                    className='w-full mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+                    placeholder='Wpisz salę'
+                  />
+                </div>
+
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>Przedmiot</label>
+                  <input
+                    type='text'
+                    value={selectedFilteredTeacher?.lessonName}
+                    className='w-full mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+                    placeholder='Wpisz przedmiot'
+                  />
+                </div>
+              </div>
             </>
           ) : (
             <></>
           )}
 
-          <button
-            type='submit'
+          <input
+            type='button'
             className='w-full bg-blue-500 text-white font-semibold py-2 rounded-md shadow-md hover:bg-blue-600 transition duration-300'
-            onClick={handleSaveSettings}>
-            Zapisz ustawienia
-          </button>
+            onClick={handleSaveSettings}
+            value='Zapisz'
+          />
         </form>
       </div>
     </>
