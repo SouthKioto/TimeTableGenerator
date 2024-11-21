@@ -3,35 +3,32 @@ import { Teacher, TeachersData } from './TeachersData';
 
 export const Settings = () => {
   const [selectedFilteredTeacher, setSelectedFilteredTeacher] = useState<Teacher | null>(null);
-  const [teacherId, setTeacherId] = useState<number>(0);
+  //const [teacherId, setTeacherId] = useState<number>(0); //moze sie przydac
   const [checkIsSelected, setCheckIsSelected] = useState(false);
 
-  // changed teacher data states
   const [name, setName] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
   const [lessonsCount, setLessonsCount] = useState<number>(0);
   const [classroom, setClassroom] = useState<string>('');
   const [lessonName, setLessonName] = useState<string>('');
 
-  useEffect(() => {
-    handleFilterTeachersById(teacherId);
-    //console.log(selectedFilteredTeacher);
+  const handleFilterTeachersById = (teacherId: number) => {
+    const filteredTeacher = TeachersData.find(teacher => teacher.id === teacherId) || null;
 
-    if (selectedFilteredTeacher !== null) {
-      setName(selectedFilteredTeacher?.name || '');
-      setSurname(selectedFilteredTeacher?.surname || '');
-      setLessonsCount(selectedFilteredTeacher?.lessonsInWeekCount || 0);
-      setClassroom(selectedFilteredTeacher?.classroom || '');
-      setLessonName(selectedFilteredTeacher?.lessonName || '');
-    } else {
-      setName('');
-      setSurname('');
-      setLessonsCount(0);
-      setClassroom('');
-      setLessonName('');
-    }
-  }, [teacherId]);
-  // useEffect
+    setSelectedFilteredTeacher(filteredTeacher);
+    setName(filteredTeacher?.name || '');
+    setSurname(filteredTeacher?.surname || '');
+    setLessonsCount(filteredTeacher?.lessonsInWeekCount || 0);
+    setClassroom(filteredTeacher?.classroom || '');
+    setLessonName(filteredTeacher?.lessonName || '');
+  };
+
+  const handleChangeSelectedTeacher = e => {
+    const newTeacherId = parseInt(e.target.value) || 0;
+    setTeacherId(newTeacherId);
+    setCheckIsSelected(!!newTeacherId);
+    handleFilterTeachersById(newTeacherId);
+  };
 
   const handleChangeName = e => {
     setName(e.target.value);
@@ -51,22 +48,6 @@ export const Settings = () => {
 
   const handleChangeLessonName = e => {
     setLessonName(e.target.value);
-  };
-
-  const handleFilterTeachersById = (teacherId: number) => {
-    const filteredData = TeachersData.find(teacher => teacher.id === teacherId);
-    setSelectedFilteredTeacher(filteredData || null);
-  };
-
-  const handleChangeSelectedTeacher = e => {
-    if (e.target.value.length > 0) {
-      setTeacherId(parseInt(e.target.value));
-      setCheckIsSelected(true);
-      //console.log('true');
-    } else {
-      setCheckIsSelected(false);
-      //console.log('false');
-    }
   };
 
   const handleSaveSettings = () => {
