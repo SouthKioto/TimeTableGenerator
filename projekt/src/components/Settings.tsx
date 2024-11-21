@@ -3,7 +3,7 @@ import { Teacher, TeachersData } from './TeachersData';
 
 export const Settings = () => {
   const [selectedFilteredTeacher, setSelectedFilteredTeacher] = useState<Teacher | null>(null);
-  //const [teacherId, setTeacherId] = useState<number>(0); //moze sie przydac
+  const [teacherId, setTeacherId] = useState<number>(0);
   const [checkIsSelected, setCheckIsSelected] = useState(false);
 
   const [name, setName] = useState<string>('');
